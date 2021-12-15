@@ -7,9 +7,12 @@ module.exports = {
   },
   extends: [
     'plugin:vue/vue3-recommended',
-    // "eslint:recommended",
+    "eslint:recommended",
     '@vue/typescript/recommended'
   ],
+  globals: {
+    defineProps: 'readonly',// definePropsはimportしなくて良いので、警告しない。
+  },
   parserOptions: {
     'ecmaVersion': 2021
   },
