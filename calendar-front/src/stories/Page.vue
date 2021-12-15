@@ -1,6 +1,25 @@
+<script lang="ts">
+import { defineComponent } from 'vue'
+import './page.css';
+import MyHeader from './Header.vue';
+
+export default defineComponent({
+  name: 'MyPage',
+  components: { MyHeader },
+  props: {
+    user: {
+      type: Object,
+      default() {
+        return {name: 'mogataro', height: 174}
+      }
+    },
+  },
+  emits: ['login', 'logout', 'createAccount'],
+})
+</script>
 <template>
   <article>
-    <my-header
+    <MyHeader
       :user="user"
       @login="$emit('login')"
       @logout="$emit('logout')"
@@ -33,9 +52,7 @@
       </ul>
       <p>
         Get a guided tutorial on component-driven development at
-        <a href="https://storybook.js.org/tutorials/" target="_blank" rel="noopener noreferrer"
-          >Storybook tutorials</a
-        >
+        <a href="https://storybook.js.org/tutorials/" target="_blank" rel="noopener noreferrer">Storybook tutorials</a>
         . Read more in the
         <a href="https://storybook.js.org/docs" target="_blank" rel="noopener noreferrer">docs</a>
         .
@@ -57,22 +74,3 @@
     </section>
   </article>
 </template>
-
-<script>
-import './page.css';
-import MyHeader from './Header.vue';
-
-export default {
-  name: 'my-page',
-
-  components: { MyHeader },
-
-  props: {
-    user: {
-      type: Object,
-    },
-  },
-
-  emits: ['login', 'logout', 'createAccount'],
-};
-</script>
