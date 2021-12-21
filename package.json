@@ -1,5 +1,5 @@
 {
-  "name": "calendar-front",
+  "name": "calendar-vue3",
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
