@@ -6,25 +6,30 @@ module.exports = {
     node: true
   },
   extends: [
-    'plugin:vue/vue3-recommended',
+    "plugin:vue/vue3-recommended",
     "eslint:recommended",
-    '@vue/typescript/recommended'
+    // "@vue/typescript/recommended",
+    "plugin:storybook/recommended"
   ],
   globals: {
-    defineProps: 'readonly',// definePropsはimportしなくて良いので、警告しない。
+    defineProps: 'readonly' // definePropsはimportしなくて良いので、警告しない。
+
   },
   parserOptions: {
     'ecmaVersion': 2021
   },
-  plugins: [
-  ],
+  plugins: [],
   rules: {
     // 0 = off, 1 = warn, 2 = error
     // v-onイベントの命名スタイル https://eslint.vuejs.org/rules/v-on-event-hyphenation.html
     'vue/v-on-event-hyphenation': [1, "never"],
     // 自己閉鎖スタイル https://eslint.vuejs.org/rules/html-self-closing.html
     'vue/html-self-closing': [1, {
-      html: { normal: 'never', void: 'always', component: 'any' }
+      html: {
+        normal: 'never',
+        void: 'always',
+        component: 'any'
+      }
     }],
     // 1行あたりの属性の最大数 https://eslint.vuejs.org/rules/max-attributes-per-line.html
     'vue/max-attributes-per-line': [0],
@@ -41,4 +46,4 @@ module.exports = {
     // テンプレート内で使用されていないコンポーネントの登録を禁止する
     'vue/no-unused-components': [1]
   }
-}
+};

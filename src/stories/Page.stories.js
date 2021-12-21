@@ -15,7 +15,7 @@ const Template = (args) => ({
     return { user: args.user };
   },
   // Then, those values can be accessed directly in the template
-  template: '<MyPage :user="user" />',
+  template: '<my-page :user="user" />',
 });
 
 export const LoggedIn = Template.bind({});

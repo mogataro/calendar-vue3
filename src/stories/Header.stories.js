@@ -14,7 +14,7 @@ const Template = (args) => ({
     return { ...args };
   },
   // Then, the spread values can be accessed directly in the template
-  template: '<MyHeader :user="user" />',
+  template: '<my-header :user="user" />',
 });
 
 export const LoggedIn = Template.bind({});

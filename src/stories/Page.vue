@@ -1,22 +1,3 @@
-<script lang="ts">
-import { defineComponent } from 'vue'
-import './page.css';
-import MyHeader from './Header.vue';
-
-export default defineComponent({
-  name: 'MyPage',
-  components: { MyHeader },
-  props: {
-    user: {
-      type: Object,
-      default() {
-        return {name: 'mogataro', height: 174}
-      }
-    },
-  },
-  emits: ['login', 'logout', 'createAccount'],
-})
-</script>
 <template>
   <article>
     <MyHeader
@@ -74,3 +55,26 @@ export default defineComponent({
     </section>
   </article>
 </template>
+
+<script>
+import { defineComponent } from 'vue'
+import './page.css';
+import MyHeader from './Header.vue';
+
+export default defineComponent({
+  name: 'MyPage',
+  
+  components: { MyHeader },
+
+  props: {
+    user: {
+      type: Object,
+      default() {
+        return {name: ''}
+      }
+    },
+  },
+
+  emits: ['login', 'logout', 'createAccount'],
+});
+</script>
