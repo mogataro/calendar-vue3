@@ -13,7 +13,6 @@ module.exports = {
   ],
   globals: {
     defineProps: 'readonly' // definePropsはimportしなくて良いので、警告しない。
-
   },
   parserOptions: {
     'ecmaVersion': 2021
@@ -44,6 +43,6 @@ module.exports = {
     // requiredではないpropsにはdefaultを設定しなければならない
     'vue/require-default-prop': [2],
     // テンプレート内で使用されていないコンポーネントの登録を禁止する
-    'vue/no-unused-components': [1]
+    'vue/no-unused-components': [1],
   }
 };

@@ -16,6 +16,7 @@
     "*.{ts,vue}": "eslint --fix"
   },
   "dependencies": {
+    "moment": "^2.29.2",
     "vue": "^3.2.25"
   },
   "devDependencies": {
