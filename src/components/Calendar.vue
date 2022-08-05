@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import moment from 'moment'
 // import { ref, computed, defineComponent, reactive, watchEffect, onMounted } from 'vue'
-import { ref, computed, reactive } from 'vue'
+import { ref, computed, reactive, watch } from 'vue'
 
 defineProps({
   msg: {
@@ -10,17 +10,26 @@ defineProps({
   }
 })
 
+const canNextMonth = computed(() => {
+  return diffOfMonth.value < numberOfMonths.value
+})
+
+const canPrevMonth = computed(() => {
+  return diffOfMonth.value > 0
+})
+
 /** 表示されている月と今月との差分 */
 const diffOfMonth =  ref(0)
-const monthCalendar = reactive([])
+// const monthCalendar = reactive([])
+const selectedCalendar = reactive([])
 
 /** 選択中の年月日(YYYY-MM-DD) */
-const selectedDate = moment('2022-04-01').format('YYYY-MM-DD')
+const selectedDate = ref(moment('2022-05-01').format('YYYY-MM-DD'))
 
 /** 表示する月数 */
-// const numberOfMonths = computed(() => {
-//   return 2
-// })
+const numberOfMonths = computed(() => {
+  return 2
+})
 
 /** 初期表示する月 */
 // const firstMonth = computed(() => {
@@ -29,13 +38,28 @@ const selectedDate = moment('2022-04-01').format('YYYY-MM-DD')
 
 /** 現在表示している年月の初日 */
 const firstDayOfselectedMonth = computed(() => {
-  const date = moment(selectedDate, 'YYYY-MM-DD')
-  date.startOf('month')
-  return diffOfMonth.value > 0 ? date.add(diffOfMonth.value, 'months') : date;
+  const date = moment(selectedDate.value, 'YYYY-MM-DD').startOf('month')
+  console.log('firstDayOfselectedMonth', diffOfMonth.value > 0 ? date.add(diffOfMonth.value, 'months').format('YYYY-MM-DD') : date.format('YYYY-MM-DD'))
+  console.log('diffOfMonth', diffOfMonth.value)
+  return diffOfMonth.value > 0 ? date.add(diffOfMonth.value, 'months') : date
 })
 
+watch(
+  () => diffOfMonth.value,
+  (diffOfMonth) => {
+    console.log('diffOfMonth',diffOfMonth)
+    setCalenderArray()
+  },
+  () => firstDayOfselectedMonth.value,
+  (diffOfMonth) => {
+    console.log('diffOfMonth',diffOfMonth)
+    setCalenderArray()
+  }
+)
+
 /** 現在表示している年月の表示 */
-const selectedMonthDisplay = computed(() => {
+const selectedMonthDisplay = computed(() => {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+  console.log('selectedMonthDisplay', firstDayOfselectedMonth.value.format('YYYY-MM-DD'))
   return firstDayOfselectedMonth.value.format('YYYY年MM月')
 })
 
@@ -53,7 +77,19 @@ const endDate = computed(() => {
   return date.add(6 - youbiNum, 'days')
 })
 
+const prevMonth = () => {
+  if(!canPrevMonth.value) return;
+  diffOfMonth.value--
+}
+
+const nextMonth = () => {
+  if(!canNextMonth.value) return;
+  diffOfMonth.value++
+}
+
+/** カレンダー配列を設定する */
 const setCalenderArray = () => {
+  selectedCalendar.splice(0)
   const startDateVal = startDate.value
   const endDateVal = endDate.value
   const weekNumber = Math.ceil(endDateVal.diff(startDateVal, 'days') / 7)
@@ -63,34 +99,20 @@ const setCalenderArray = () => {
     let tmpStartDate = startDate.value
     for (let day = 0;  day < 7; day++) {
       const date = tmpStartDate.format('YYYY-MM-DD');
-      // const states = this.occupancySeats[date] === undefined ? 0 : this.occupancySeats[date];
-      // const holidayClass = {
-      //   'holiday': this.holidays[date],
-      //   'saturday': moment(date).format('d') === '6',
-      //   'sunday': moment(date).format('d') === '0',
-      // }
-      // const isPast = moment(date).isBefore(moment(this.selectableLastDate, 'YYYY-MM-DD'));
       const displayDate = firstDayOfselectedMonth.value.format('M') === tmpStartDate.format('M') ? moment(date).format('D') : moment(date).format('M/D');
-      // const [imgSrc, canClick] = this.getImgSrcAndCanClick(isPast, states);
-      // const cssClass1 = canClick ? 'btn-owd' : 'can-not-select';
-      // const cssClass2 = date === this.selectedDate && canClick ? 'btn-owd-selected' : '';
-      // const dayClass = [cssClass1, cssClass2, holidayClass];
 
       const canClick = true
       weekRow.push({
         date,
         displayDate,
-        // dayClass,
-        // imgSrc,
         canClick,
       });
       tmpStartDate.add(1, 'days');
     }
-    console.log('weekRow', weekRow)
-    monthCalendar.push(weekRow);
+    selectedCalendar.push(weekRow);
   }
   // calendars = tempCalendars.values
-  // this.selectedCalendar = calendars;
+  // selectedCalendar = calendars;
   // this.selectedCalendar.splice();
 }
 
@@ -105,10 +127,14 @@ setCalenderArray()
   </button> -->
 
   <div>
-    <!-- <div class="d-flex justify-content-between">
-      <button class="btn btn-outline-secondary btn-sm m-2" v-bind:disabled="!canPrevMonth" v-on:click="prevMonth"><i class="fas fa-arrow-left mr-1"></i>前の月</button>
-      <button class="btn btn-outline-secondary btn-sm m-2" v-bind:disabled="!canNextMonth" v-on:click="nextMonth">次の月<i class="fas fa-arrow-right ml-1"></i></button>
-    </div> -->
+    <div>
+      <button :disabled="!canPrevMonth" @click="prevMonth">
+        前の月
+      </button>
+      <button :disabled="!canNextMonth" @click="nextMonth">
+        次の月
+      </button>
+    </div>
     <div>
       <div>
         <table cellPadding="0" style="width:100%">
@@ -126,11 +152,10 @@ setCalenderArray()
             <th><span className="">金</span></th>
             <th><span className="">土</span></th>
           </tr>
-          <tr v-for="(week, i) in monthCalendar" :key="'aaa' + i" v-cloak>
+          <tr v-for="(week, i) in selectedCalendar" :key="'aaa' + i" v-cloak>
             <td v-for="(day) in week" :key="day.date">
               <div :data-Date="day.date" :data-CanSelect="day.canClick">
                 {{ day.displayDate }}
-                <!-- <img :src="day.imgSrc"> -->
               </div>
             </td>
           </tr>
